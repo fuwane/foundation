@@ -42,6 +42,19 @@ pub mod commnication {
             }
         })
     }
+
+
+    #[cfg(test)]
+    mod tests {
+        use super::create_lazy_channel;
+
+        #[test]
+        fn test_lazy_channel() {
+            let c = create_lazy_channel::<bool>();
+            c.tx.blocking_send(true).unwrap();
+            assert!(c.rx.blocking_lock().blocking_recv().unwrap());
+        }
+    }
 }
 
 

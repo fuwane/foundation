@@ -14,3 +14,6 @@ serde = "1.0.160"
 [target.'cfg(not(target_arch="wasm32"))'.dependencies.songbird]
 version = "0.3.1"
 features = ["driver"]
+
+[dev-dependencies]
+songbird = { version = "0.3.1", features = ["driver"] }
