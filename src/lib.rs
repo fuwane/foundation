@@ -2,7 +2,6 @@
 
 extern crate serde;
 use serde::{ Serialize, Deserialize };
-use serde_big_array::BigArray;
 
 
 #[cfg(target_arch="wasm32")]
@@ -23,24 +22,21 @@ pub mod constants {
 }
 
 
-pub mod commnication {
+pub mod communication {
     use std::sync::Arc;
     
     use tokio::sync::{ mpsc::{ Sender, Receiver, channel }, Mutex as AioMutex };
-    use once_cell::sync::Lazy;
 
-    
+
     pub struct Channel<T> {
         pub tx: Sender<T>,
         pub rx: Arc<AioMutex<Receiver<T>>>
     }
 
-    pub fn create_lazy_channel<T>() -> Lazy<Channel<T>> {
-        Lazy::new(|| {
-            let (tx, rx) = channel(128); Channel {
-                tx: tx, rx: Arc::new(AioMutex::new(rx))
-            }
-        })
+    pub fn create_lazy_channel<T>() -> Channel<T> {
+        let (tx, rx) = channel(128); Channel {
+            tx: tx, rx: Arc::new(AioMutex::new(rx))
+        }
     }
 
 
@@ -58,8 +54,5 @@ pub mod commnication {
 }
 
 
-#[derive(Serialize, Deserialize)]
-pub struct Context {
-    #[serde(with="BigArray")]
-    pub buffer: [u8;constants::STEREO_FRAME_BYTE_SIZE]
-}
+#[derive(Default, Serialize, Deserialize)]
+pub struct Context {}
