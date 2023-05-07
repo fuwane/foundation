@@ -1,8 +1,5 @@
 //! FuwaNe Foundation - Event
 
-extern crate serde;
-use serde::{ Serialize, Deserialize };
-
 
 #[cfg(target_arch="wasm32")]
 pub mod constants {
@@ -35,7 +32,7 @@ pub mod communication {
 
     pub fn create_lazy_channel<T>() -> Channel<T> {
         let (tx, rx) = channel(128); Channel {
-            tx: tx, rx: Arc::new(AioMutex::new(rx))
+            tx, rx: Arc::new(AioMutex::new(rx))
         }
     }
 
@@ -54,5 +51,17 @@ pub mod communication {
 }
 
 
-#[derive(Default, Serialize, Deserialize)]
-pub struct Context {}
+pub mod binding {
+    extern crate serde;
+    use serde::{ Serialize, Deserialize };
+
+    #[derive(Default, Serialize, Deserialize)]
+    pub struct Context {}
+
+
+    #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+    pub struct PluginData {
+        pub manager_id: u32,
+        pub service_id: u32
+    }
+}
