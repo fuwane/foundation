@@ -30,9 +30,11 @@ pub mod communication {
         pub rx: Arc<AioMutex<Receiver<T>>>
     }
 
-    pub fn create_lazy_channel<T>() -> Channel<T> {
-        let (tx, rx) = channel(128); Channel {
-            tx, rx: Arc::new(AioMutex::new(rx))
+    impl<T> Channel<T> {
+        pub fn new() -> Channel<T> {
+            let (tx, rx) = channel(128); Channel {
+                tx, rx: Arc::new(AioMutex::new(rx))
+            }
         }
     }
 
